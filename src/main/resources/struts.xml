@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+        "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+    <constant name="struts.enable.DynamicMethodInvocation" value="true"/>
+    <!-- 是否开启动态方法调用 -->
+    <constant name="struts.devMode" value="true"/>
+    <!-- 开启使用开发模式，详细错误提示 -->
+    <constant name="struts.objectFactory" value="spring"/>
+    <!-- 将对象交给spring管理 -->
+    <constant name="struts.convention.default.parent.package" value="crud-default"/>
+    <constant name="struts.convention.package.locators" value="web,action"/>
+    <constant name="struts.convention.package.locators.basePackage" value="com.gc"/>
+    <constant name="struts.convention.action.suffix" value="action"></constant>
+    <!-- action后缀 -->
+
+	<!-- 用于CRUD Action的parent package -->
+	<package name="crud-default" extends="convention-default">
+		<!-- 基于paramsPrepareParamsStack,
+			增加store interceptor保证actionMessage在redirect后不会丢失 -->
+		<interceptors>
+			<interceptor-stack name="crudStack">
+				<interceptor-ref name="store">
+					<param name="operationMode">AUTOMATIC</param>
+				</interceptor-ref>
+				<interceptor-ref name="paramsPrepareParamsStack" />
+			</interceptor-stack>
+		</interceptors>
+
+		<default-interceptor-ref name="crudStack" />
+	</package>
+
+	<!-- 
+		使用Convention插件,实现约定大于配置的零配置文件风格.
+	           特殊的Result路径在Action类中使用@Result设定. 
+	-->
+</struts>
